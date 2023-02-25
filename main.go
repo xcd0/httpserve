@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 func init() {
-	log.SetFlags(log.Ltime | log.Lshortfile) // ログの出力書式を設定する
+	log.SetFlags(log.Ltime | log.Lshortfile)
 }
 
 func main() {
@@ -17,5 +18,9 @@ func main() {
 	http.HandleFunc("/aaa/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "/aaa/\n")
 	})
-	log.Fatal(http.ListenAndServe(":80", nil)) // リバースプロキシサーバーの起動
+	if len(os.Args) == 1 {
+		log.Fatal(http.ListenAndServe(":80", nil))
+	} else if len(os.Args) == 2 {
+		log.Fatal(http.ListenAndServe(":"+os.Args[1], nil))
+	}
 }
